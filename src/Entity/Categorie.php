@@ -25,6 +25,9 @@ class Categorie extends BaseEntity
     #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'categorie')]
     private Collection $produits;
 
+    #[ORM\OneToOne(inversedBy: 'categorie', cascade: ['persist', 'remove'])]
+    private ?TVA $tvaParDefaut = null;
+
     public function __construct()
     {
         $this->produits = new ArrayCollection();
@@ -73,6 +76,18 @@ class Categorie extends BaseEntity
                 $produit->setCategorie(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTvaParDefaut(): ?TVA
+    {
+        return $this->tvaParDefaut;
+    }
+
+    public function setTvaParDefaut(?TVA $tvaParDefaut): static
+    {
+        $this->tvaParDefaut = $tvaParDefaut;
 
         return $this;
     }
