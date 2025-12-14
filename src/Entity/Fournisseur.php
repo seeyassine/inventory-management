@@ -6,7 +6,7 @@ use App\Repository\FournisseurRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FournisseurRepository::class)]
-class Fournisseur
+class Fournisseur extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
