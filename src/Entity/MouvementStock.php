@@ -6,7 +6,7 @@ use App\Repository\MouvementStockRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MouvementStockRepository::class)]
-class MouvementStock
+class MouvementStock extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
