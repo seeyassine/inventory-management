@@ -44,6 +44,9 @@ class Produit
     #[ORM\ManyToOne(inversedBy: 'produits')]
     private ?TVA $tva = null;
 
+    #[ORM\ManyToOne(inversedBy: 'produits')]
+    private ?Emplacement $emplacement = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -180,6 +183,18 @@ class Produit
     public function setTva(?TVA $tva): static
     {
         $this->tva = $tva;
+
+        return $this;
+    }
+
+    public function getEmplacement(): ?Emplacement
+    {
+        return $this->emplacement;
+    }
+
+    public function setEmplacement(?Emplacement $emplacement): static
+    {
+        $this->emplacement = $emplacement;
 
         return $this;
     }
