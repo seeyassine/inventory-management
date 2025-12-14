@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
@@ -46,6 +48,17 @@ class Produit
 
     #[ORM\ManyToOne(inversedBy: 'produits')]
     private ?Emplacement $emplacement = null;
+
+    /**
+     * @var Collection<int, Fournisseur>
+     */
+    #[ORM\ManyToMany(targetEntity: Fournisseur::class, mappedBy: 'produits')]
+    private Collection $fournisseurs;
+
+    public function __construct()
+    {
+        $this->fournisseurs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -195,6 +208,33 @@ class Produit
     public function setEmplacement(?Emplacement $emplacement): static
     {
         $this->emplacement = $emplacement;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Fournisseur>
+     */
+    public function getFournisseurs(): Collection
+    {
+        return $this->fournisseurs;
+    }
+
+    public function addFournisseur(Fournisseur $fournisseur): static
+    {
+        if (!$this->fournisseurs->contains($fournisseur)) {
+            $this->fournisseurs->add($fournisseur);
+            $fournisseur->addProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFournisseur(Fournisseur $fournisseur): static
+    {
+        if ($this->fournisseurs->removeElement($fournisseur)) {
+            $fournisseur->removeProduit($this);
+        }
 
         return $this;
     }
