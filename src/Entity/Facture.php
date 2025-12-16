@@ -31,9 +31,16 @@ class Facture extends BaseEntity
     #[ORM\OneToMany(targetEntity: LigneFacture::class, mappedBy: 'facture')]
     private Collection $ligneFactures;
 
+    /**
+     * @var Collection<int, NoteFinanciere>
+     */
+    #[ORM\OneToMany(targetEntity: NoteFinanciere::class, mappedBy: 'facture')]
+    private Collection $noteFinancieres;
+
     public function __construct()
     {
         $this->ligneFactures = new ArrayCollection();
+        $this->noteFinancieres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -101,6 +108,36 @@ class Facture extends BaseEntity
             // set the owning side to null (unless already changed)
             if ($ligneFacture->getFacture() === $this) {
                 $ligneFacture->setFacture(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NoteFinanciere>
+     */
+    public function getNoteFinancieres(): Collection
+    {
+        return $this->noteFinancieres;
+    }
+
+    public function addNoteFinanciere(NoteFinanciere $noteFinanciere): static
+    {
+        if (!$this->noteFinancieres->contains($noteFinanciere)) {
+            $this->noteFinancieres->add($noteFinanciere);
+            $noteFinanciere->setFacture($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNoteFinanciere(NoteFinanciere $noteFinanciere): static
+    {
+        if ($this->noteFinancieres->removeElement($noteFinanciere)) {
+            // set the owning side to null (unless already changed)
+            if ($noteFinanciere->getFacture() === $this) {
+                $noteFinanciere->setFacture(null);
             }
         }
 
