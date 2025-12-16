@@ -26,6 +26,14 @@ class LigneCommande extends BaseEntity
     #[ORM\Column(enumType: StatutCommande::class)]
     private ?StatutCommande $statut;
 
+    #[ORM\ManyToOne(inversedBy: 'ligneCommandes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Commande $commande = null;
+
+    #[ORM\ManyToOne(inversedBy: 'ligneCommandes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Produit $produit = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +84,30 @@ class LigneCommande extends BaseEntity
     public function setStatut(StatutCommande $statut): static
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getCommande(): ?Commande
+    {
+        return $this->commande;
+    }
+
+    public function setCommande(?Commande $commande): static
+    {
+        $this->commande = $commande;
+
+        return $this;
+    }
+
+    public function getProduit(): ?Produit
+    {
+        return $this->produit;
+    }
+
+    public function setProduit(?Produit $produit): static
+    {
+        $this->produit = $produit;
 
         return $this;
     }

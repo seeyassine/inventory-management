@@ -61,10 +61,17 @@ class Produit
     #[ORM\OneToMany(targetEntity: MouvementStock::class, mappedBy: 'produit')]
     private Collection $mouvementStocks;
 
+    /**
+     * @var Collection<int, LigneCommande>
+     */
+    #[ORM\OneToMany(targetEntity: LigneCommande::class, mappedBy: 'produit')]
+    private Collection $ligneCommandes;
+
     public function __construct()
     {
         $this->fournisseurs = new ArrayCollection();
         $this->mouvementStocks = new ArrayCollection();
+        $this->ligneCommandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -270,6 +277,36 @@ class Produit
             // set the owning side to null (unless already changed)
             if ($mouvementStock->getProduit() === $this) {
                 $mouvementStock->setProduit(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LigneCommande>
+     */
+    public function getLigneCommandes(): Collection
+    {
+        return $this->ligneCommandes;
+    }
+
+    public function addLigneCommande(LigneCommande $ligneCommande): static
+    {
+        if (!$this->ligneCommandes->contains($ligneCommande)) {
+            $this->ligneCommandes->add($ligneCommande);
+            $ligneCommande->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneCommande(LigneCommande $ligneCommande): static
+    {
+        if ($this->ligneCommandes->removeElement($ligneCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneCommande->getProduit() === $this) {
+                $ligneCommande->setProduit(null);
             }
         }
 
