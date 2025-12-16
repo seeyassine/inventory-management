@@ -25,6 +25,9 @@ class MouvementStock extends BaseEntity
     #[ORM\ManyToOne(inversedBy: 'mouvementStocks')]
     private ?Produit $produit = null;
 
+    #[ORM\ManyToOne(inversedBy: 'mouvementStocks')]
+    private ?User $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class MouvementStock extends BaseEntity
     public function setProduit(?Produit $produit): static
     {
         $this->produit = $produit;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
