@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use App\Enum\StatutDevis;
 use App\Repository\DevisRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DevisRepository::class)]
-class Devis
+class Devis extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,6 +24,17 @@ class Devis
 
     #[ORM\Column(enumType: StatutDevis::class)]
     private ?StatutDevis $statut = null;
+
+    /**
+     * @var Collection<int, LingeDevis>
+     */
+    #[ORM\OneToMany(targetEntity: LingeDevis::class, mappedBy: 'devis')]
+    private Collection $lingeDevis;
+
+    public function __construct()
+    {
+        $this->lingeDevis = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -60,6 +73,36 @@ class Devis
     public function setStatut(StatutDevis $statut): static
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LingeDevis>
+     */
+    public function getLingeDevis(): Collection
+    {
+        return $this->lingeDevis;
+    }
+
+    public function addLingeDevi(LingeDevis $lingeDevi): static
+    {
+        if (!$this->lingeDevis->contains($lingeDevi)) {
+            $this->lingeDevis->add($lingeDevi);
+            $lingeDevi->setDevis($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLingeDevi(LingeDevis $lingeDevi): static
+    {
+        if ($this->lingeDevis->removeElement($lingeDevi)) {
+            // set the owning side to null (unless already changed)
+            if ($lingeDevi->getDevis() === $this) {
+                $lingeDevi->setDevis(null);
+            }
+        }
 
         return $this;
     }
