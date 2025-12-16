@@ -73,12 +73,19 @@ class Produit
     #[ORM\OneToMany(targetEntity: LingeDevis::class, mappedBy: 'produit')]
     private Collection $lingeDevis;
 
+    /**
+     * @var Collection<int, LigneFacture>
+     */
+    #[ORM\OneToMany(targetEntity: LigneFacture::class, mappedBy: 'produit')]
+    private Collection $ligneFactures;
+
     public function __construct()
     {
         $this->fournisseurs = new ArrayCollection();
         $this->mouvementStocks = new ArrayCollection();
         $this->ligneCommandes = new ArrayCollection();
         $this->lingeDevis = new ArrayCollection();
+        $this->ligneFactures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -344,6 +351,36 @@ class Produit
             // set the owning side to null (unless already changed)
             if ($lingeDevi->getProduit() === $this) {
                 $lingeDevi->setProduit(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LigneFacture>
+     */
+    public function getLigneFactures(): Collection
+    {
+        return $this->ligneFactures;
+    }
+
+    public function addLigneFacture(LigneFacture $ligneFacture): static
+    {
+        if (!$this->ligneFactures->contains($ligneFacture)) {
+            $this->ligneFactures->add($ligneFacture);
+            $ligneFacture->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneFacture(LigneFacture $ligneFacture): static
+    {
+        if ($this->ligneFactures->removeElement($ligneFacture)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneFacture->getProduit() === $this) {
+                $ligneFacture->setProduit(null);
             }
         }
 
