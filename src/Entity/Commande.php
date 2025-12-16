@@ -7,7 +7,7 @@ use App\Repository\CommandeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
-class Commande
+class Commande extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,6 +22,9 @@ class Commande
 
     #[ORM\Column(enumType: StatutCommande::class)]
     private ?StatutCommande $statut;
+
+    #[ORM\ManyToOne(inversedBy: 'commandes')]
+    private ?Fournisseur $fournisseur = null;
 
     public function __construct()
     {
@@ -66,6 +69,18 @@ class Commande
     public function setStatut(StatutCommande $statut): static
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getFournisseur(): ?Fournisseur
+    {
+        return $this->fournisseur;
+    }
+
+    public function setFournisseur(?Fournisseur $fournisseur): static
+    {
+        $this->fournisseur = $fournisseur;
 
         return $this;
     }
