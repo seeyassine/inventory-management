@@ -11,10 +11,10 @@ class RegisterRequest
     public string $email;
 
     #[Assert\NotBlank]
-    public string $firstname;
+    public string $firstName;
 
     #[Assert\NotBlank]
-    public string $lastname;
+    public string $lastName;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 6)]

@@ -31,8 +31,8 @@ class AuthService
 
         $user = new User();
         $user->setEmail($registerRequest->email);
-        $user->setFirstname($registerRequest->firstname);
-        $user->setLastname($registerRequest->lastname);
+        $user->setFirstName($registerRequest->firstName);
+        $user->setLastName($registerRequest->lastName);
         $user->setRoles($registerRequest->roles);
         $user->setPassword(
             $this->passwordHasher->hashPassword($user, $registerRequest->password)
