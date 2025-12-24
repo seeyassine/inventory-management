@@ -5,9 +5,9 @@ controllers:
     type: attribute
 
 
-# api_login:
-#     path: /api/login
-#     methods: POST
+api_login:
+    path: /api/login
+    methods: POST
 
 # api_register:
 #     path: /api/register
