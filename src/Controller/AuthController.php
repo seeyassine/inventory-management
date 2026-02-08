@@ -2,20 +2,16 @@
 
 namespace App\Controller;
 
-use App\DTO\LoginRequest;
+
 use App\DTO\RegisterRequest;
-use App\Entity\User;
 use App\Service\AuthService;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class AuthController extends AbstractController
 {
@@ -42,8 +38,8 @@ class AuthController extends AbstractController
                 'user' => [
                     'id' => $user->getId(),
                     'email' => $user->getEmail(),
-                    'firstname' => $user->getFirstname(),
-                    'lastname' => $user->getLastname()
+                    'firstName' => $user->getFirstName(),
+                    'lastName' => $user->getLastName()
                 ]
             ], Response::HTTP_CREATED);
 
@@ -54,47 +50,6 @@ class AuthController extends AbstractController
         }
     }
 
-    #[Route('/api/login', name: 'api_login', methods: ['POST'])]
-    public function login(
-        Request $request,
-        JWTTokenManagerInterface $JWTManager,
-        UserPasswordHasherInterface $passwordHasher,
-        SerializerInterface $serializer,
-        ValidatorInterface $validator,
-        EntityManagerInterface $entityManager
-    ): JsonResponse {
-        try {
-            /** @var LoginRequest $loginRequest */
-            $loginRequest = $serializer->deserialize($request->getContent(), LoginRequest::class, 'json');
-
-            $errors = $validator->validate($loginRequest);
-            if (count($errors) > 0) {
-                return $this->json(['errors' => (string) $errors], Response::HTTP_BAD_REQUEST);
-            }
-            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $loginRequest->email]);
-
-            if (!$user || !$passwordHasher->isPasswordValid($user, $loginRequest->password)) {
-                return $this->json(['error' => 'Invalid credentials'], Response::HTTP_UNAUTHORIZED);
-            }
-
-            $token = $JWTManager->create($user);
-
-            return $this->json([
-                'message' => 'Login successful',
-                'token' => $token,
-                'user' => [
-                    'id' => $user->getId(),
-                    'email' => $user->getEmail(),
-                    'firstname' => $user->getFirstname(),
-                    'lastname' => $user->getLastname(),
-                    'roles' => $user->getRoles()
-                ]
-            ]);
-
-        } catch (\Exception $e) {
-            return $this->json(['error' => 'Login failed'], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
 
     #[Route('/api/me', name: 'api_me', methods: ['GET'])]
     public function me(): JsonResponse
@@ -109,8 +64,8 @@ class AuthController extends AbstractController
             'user' => [
                 'id' => $user->getId(),
                 'email' => $user->getEmail(),
-                'firstname' => $user->getFirstname(),
-                'lastname' => $user->getLastname(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
                 'roles' => $user->getRoles()
             ]
         ]);

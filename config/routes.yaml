@@ -5,10 +5,15 @@ controllers:
     type: attribute
 
 
-# api_login:
-#     path: /api/login
-#     methods: POST
+api_login:
+    path: /api/login
+    methods: POST
 
 # api_register:
 #     path: /api/register
 #     methods: POST
+
+#refresh token
+gesdinet_jwt_refresh_token:
+    path: /api/token/refresh
+    methods: POST

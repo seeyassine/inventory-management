@@ -1,0 +1,10 @@
+gesdinet_jwt_refresh_token:
+    refresh_token_class: App\Entity\RefreshToken
+    ttl: '%env(int:JWT_REFRESH_TOKEN_TTL)%'
+    ttl_update: true  # Mettre à jour la date d'expiration à chaque utilisation
+    user_provider: app_user_provider
+    user_identity_field: email
+    manager_type: orm
+    firewall: refresh  # Le nom de votre firewall principal
+    return_expiration: true
+    single_use: '%env(bool:JWT_REFRESH_SINGLE_USE)%' 
